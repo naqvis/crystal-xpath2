@@ -1,0 +1,15 @@
+name: xpath2
+version: 0.1.0
+
+authors:
+  - Ali Naqvi <syed.alinaqvi@gmail.com>
+description: |
+ XPath implementation in Crystal
+
+crystal: 0.34.0
+
+license: MIT
+
+dependencies:
+  fnv:
+    github: naqvis/crystal-fnv
