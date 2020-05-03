@@ -154,7 +154,7 @@ Supported Features
 
    ```yaml
    dependencies:
-     html:
+     xpath2:
        github: naqvis/crystal-xpath2
    ```
 
