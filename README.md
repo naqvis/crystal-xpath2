@@ -1,5 +1,5 @@
 # Crystal XPath2
-[![Build Status](https://travis-ci.org/naqvis/crystal-xpath2.svg?branch=master)](https://travis-ci.org/naqvis/crystal-xpath2)
+![CI](https://github.com/naqvis/crystal-xpath2/workflows/CI/badge.svg)
 [![GitHub release](https://img.shields.io/github/release/naqvis/crystal-xpath2.svg)](https://github.com/naqvis/crystal-xpath2/releases)
 [![Docs](https://img.shields.io/badge/docs-available-brightgreen.svg)](https://naqvis.github.io/crystal-xpath2/)
 
