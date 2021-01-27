@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 0.35.1">
+<meta name="crystal_docs.project_version" content="master">
+<meta name="crystal_docs.project_name" content="xpath2">
+
+
+
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/doc.js"></script>
+
+  <meta name="repository-name" content="xpath2">
+  <title>XPath2::TokenType - xpath2 master</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../index.html">
+          xpath2
+        </a>
+      </h1>
+
+      <span class="project-version">
+        master
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="xpath2/XPath2" data-name="xpath2">
+      <a href="../XPath2.html">XPath2</a>
+      
+        <ul>
+  
+  <li class=" " data-id="xpath2/XPath2/Expr" data-name="xpath2::expr">
+      <a href="../XPath2/Expr.html">Expr</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/ExprResult" data-name="xpath2::exprresult">
+      <a href="../XPath2/ExprResult.html">ExprResult</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/LogicalFunc" data-name="xpath2::logicalfunc">
+      <a href="../XPath2/LogicalFunc.html">LogicalFunc</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/NodeIterator" data-name="xpath2::nodeiterator">
+      <a href="../XPath2/NodeIterator.html">NodeIterator</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/NodeNavigator" data-name="xpath2::nodenavigator">
+      <a href="../XPath2/NodeNavigator.html">NodeNavigator</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/NodeType" data-name="xpath2::nodetype">
+      <a href="../XPath2/NodeType.html">NodeType</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/NumericFunc" data-name="xpath2::numericfunc">
+      <a href="../XPath2/NumericFunc.html">NumericFunc</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/ParserNodeType" data-name="xpath2::parsernodetype">
+      <a href="../XPath2/ParserNodeType.html">ParserNodeType</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/Predicate" data-name="xpath2::predicate">
+      <a href="../XPath2/Predicate.html">Predicate</a>
+      
+    </li>
+  
+  <li class=" current" data-id="xpath2/XPath2/TokenType" data-name="xpath2::tokentype">
+      <a href="../XPath2/TokenType.html">TokenType</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/XPath2Exception" data-name="xpath2::xpath2exception">
+      <a href="../XPath2/XPath2Exception.html">XPath2Exception</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">enum</span> XPath2::TokenType
+
+</h1>
+
+
+
+
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>An XPath expression token type</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      <a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L3" target="_blank">
+        xpath2/parse.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+  
+    <h2>
+      <a id="enum-members" class="anchor" href="#enum-members">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Enum Members
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="Comma">
+        <strong>Comma</strong> = <code><span class="n">0</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Slash">
+        <strong>Slash</strong> = <code><span class="n">1</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>','</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="At">
+        <strong>At</strong> = <code><span class="n">2</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'/'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Dot">
+        <strong>Dot</strong> = <code><span class="n">3</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'@'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="LParens">
+        <strong>LParens</strong> = <code><span class="n">4</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'.'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="RParens">
+        <strong>RParens</strong> = <code><span class="n">5</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'('</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="LBracket">
+        <strong>LBracket</strong> = <code><span class="n">6</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>')'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="RBracket">
+        <strong>RBracket</strong> = <code><span class="n">7</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'['</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Star">
+        <strong>Star</strong> = <code><span class="n">8</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>']'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Plus">
+        <strong>Plus</strong> = <code><span class="n">9</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'*'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Minus">
+        <strong>Minus</strong> = <code><span class="n">10</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'+'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Eq">
+        <strong>Eq</strong> = <code><span class="n">11</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'-'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Lt">
+        <strong>Lt</strong> = <code><span class="n">12</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'='</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Gt">
+        <strong>Gt</strong> = <code><span class="n">13</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'&lt;'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Bang">
+        <strong>Bang</strong> = <code><span class="n">14</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'>'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Dollar">
+        <strong>Dollar</strong> = <code><span class="n">15</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'!'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Apos">
+        <strong>Apos</strong> = <code><span class="n">16</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'$'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Quote">
+        <strong>Quote</strong> = <code><span class="n">17</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'\''</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Union">
+        <strong>Union</strong> = <code><span class="n">18</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'"'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Ne">
+        <strong>Ne</strong> = <code><span class="n">19</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'|'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Le">
+        <strong>Le</strong> = <code><span class="n">20</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'!='</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Ge">
+        <strong>Ge</strong> = <code><span class="n">21</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'&lt;='</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="And">
+        <strong>And</strong> = <code><span class="n">22</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'>='</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Or">
+        <strong>Or</strong> = <code><span class="n">23</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'&&'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="DotDot">
+        <strong>DotDot</strong> = <code><span class="n">24</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'||'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="SlashSlash">
+        <strong>SlashSlash</strong> = <code><span class="n">25</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'..'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Name">
+        <strong>Name</strong> = <code><span class="n">26</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>'//'</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="String">
+        <strong>String</strong> = <code><span class="n">27</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>XML Name</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Number">
+        <strong>Number</strong> = <code><span class="n">28</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Quoted string constant</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Axe">
+        <strong>Axe</strong> = <code><span class="n">29</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Number constant</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="Eof">
+        <strong>Eof</strong> = <code><span class="n">30</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Axe (like child::)</p>
+      </dd>
+      
+    
+  </dl>
+
+
+
+
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#and?-instance-method" class="signature"><strong>#and?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#apos?-instance-method" class="signature"><strong>#apos?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#at?-instance-method" class="signature"><strong>#at?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#axe?-instance-method" class="signature"><strong>#axe?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#bang?-instance-method" class="signature"><strong>#bang?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#comma?-instance-method" class="signature"><strong>#comma?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#dollar?-instance-method" class="signature"><strong>#dollar?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#dot?-instance-method" class="signature"><strong>#dot?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#dot_dot?-instance-method" class="signature"><strong>#dot_dot?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#eof?-instance-method" class="signature"><strong>#eof?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#eq?-instance-method" class="signature"><strong>#eq?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ge?-instance-method" class="signature"><strong>#ge?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#gt?-instance-method" class="signature"><strong>#gt?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#l_bracket?-instance-method" class="signature"><strong>#l_bracket?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#l_parens?-instance-method" class="signature"><strong>#l_parens?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#le?-instance-method" class="signature"><strong>#le?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#lt?-instance-method" class="signature"><strong>#lt?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#minus?-instance-method" class="signature"><strong>#minus?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#name?-instance-method" class="signature"><strong>#name?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#ne?-instance-method" class="signature"><strong>#ne?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#number?-instance-method" class="signature"><strong>#number?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#or?-instance-method" class="signature"><strong>#or?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#plus?-instance-method" class="signature"><strong>#plus?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#quote?-instance-method" class="signature"><strong>#quote?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#r_bracket?-instance-method" class="signature"><strong>#r_bracket?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#r_parens?-instance-method" class="signature"><strong>#r_parens?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#slash?-instance-method" class="signature"><strong>#slash?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#slash_slash?-instance-method" class="signature"><strong>#slash_slash?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#star?-instance-method" class="signature"><strong>#star?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#string?-instance-method" class="signature"><strong>#string?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#union?-instance-method" class="signature"><strong>#union?</strong></a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+<div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="and?-instance-method">
+      <div class="signature">
+        
+        def <strong>and?</strong>
+
+        <a class="method-permalink" href="#and?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L26" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="apos?-instance-method">
+      <div class="signature">
+        
+        def <strong>apos?</strong>
+
+        <a class="method-permalink" href="#apos?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L20" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="at?-instance-method">
+      <div class="signature">
+        
+        def <strong>at?</strong>
+
+        <a class="method-permalink" href="#at?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L6" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="axe?-instance-method">
+      <div class="signature">
+        
+        def <strong>axe?</strong>
+
+        <a class="method-permalink" href="#axe?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L33" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="bang?-instance-method">
+      <div class="signature">
+        
+        def <strong>bang?</strong>
+
+        <a class="method-permalink" href="#bang?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L18" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="comma?-instance-method">
+      <div class="signature">
+        
+        def <strong>comma?</strong>
+
+        <a class="method-permalink" href="#comma?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L4" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="dollar?-instance-method">
+      <div class="signature">
+        
+        def <strong>dollar?</strong>
+
+        <a class="method-permalink" href="#dollar?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L19" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="dot?-instance-method">
+      <div class="signature">
+        
+        def <strong>dot?</strong>
+
+        <a class="method-permalink" href="#dot?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L7" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="dot_dot?-instance-method">
+      <div class="signature">
+        
+        def <strong>dot_dot?</strong>
+
+        <a class="method-permalink" href="#dot_dot?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L28" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="eof?-instance-method">
+      <div class="signature">
+        
+        def <strong>eof?</strong>
+
+        <a class="method-permalink" href="#eof?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L34" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="eq?-instance-method">
+      <div class="signature">
+        
+        def <strong>eq?</strong>
+
+        <a class="method-permalink" href="#eq?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L15" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ge?-instance-method">
+      <div class="signature">
+        
+        def <strong>ge?</strong>
+
+        <a class="method-permalink" href="#ge?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L25" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="gt?-instance-method">
+      <div class="signature">
+        
+        def <strong>gt?</strong>
+
+        <a class="method-permalink" href="#gt?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L17" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="l_bracket?-instance-method">
+      <div class="signature">
+        
+        def <strong>l_bracket?</strong>
+
+        <a class="method-permalink" href="#l_bracket?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L10" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="l_parens?-instance-method">
+      <div class="signature">
+        
+        def <strong>l_parens?</strong>
+
+        <a class="method-permalink" href="#l_parens?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L8" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="le?-instance-method">
+      <div class="signature">
+        
+        def <strong>le?</strong>
+
+        <a class="method-permalink" href="#le?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L24" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="lt?-instance-method">
+      <div class="signature">
+        
+        def <strong>lt?</strong>
+
+        <a class="method-permalink" href="#lt?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L16" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="minus?-instance-method">
+      <div class="signature">
+        
+        def <strong>minus?</strong>
+
+        <a class="method-permalink" href="#minus?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L14" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="name?-instance-method">
+      <div class="signature">
+        
+        def <strong>name?</strong>
+
+        <a class="method-permalink" href="#name?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L30" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="ne?-instance-method">
+      <div class="signature">
+        
+        def <strong>ne?</strong>
+
+        <a class="method-permalink" href="#ne?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L23" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="number?-instance-method">
+      <div class="signature">
+        
+        def <strong>number?</strong>
+
+        <a class="method-permalink" href="#number?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L32" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="or?-instance-method">
+      <div class="signature">
+        
+        def <strong>or?</strong>
+
+        <a class="method-permalink" href="#or?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L27" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="plus?-instance-method">
+      <div class="signature">
+        
+        def <strong>plus?</strong>
+
+        <a class="method-permalink" href="#plus?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L13" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="quote?-instance-method">
+      <div class="signature">
+        
+        def <strong>quote?</strong>
+
+        <a class="method-permalink" href="#quote?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L21" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="r_bracket?-instance-method">
+      <div class="signature">
+        
+        def <strong>r_bracket?</strong>
+
+        <a class="method-permalink" href="#r_bracket?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L11" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="r_parens?-instance-method">
+      <div class="signature">
+        
+        def <strong>r_parens?</strong>
+
+        <a class="method-permalink" href="#r_parens?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L9" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="slash?-instance-method">
+      <div class="signature">
+        
+        def <strong>slash?</strong>
+
+        <a class="method-permalink" href="#slash?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L5" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="slash_slash?-instance-method">
+      <div class="signature">
+        
+        def <strong>slash_slash?</strong>
+
+        <a class="method-permalink" href="#slash_slash?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L29" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="star?-instance-method">
+      <div class="signature">
+        
+        def <strong>star?</strong>
+
+        <a class="method-permalink" href="#star?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L12" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="string?-instance-method">
+      <div class="signature">
+        
+        def <strong>string?</strong>
+
+        <a class="method-permalink" href="#string?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L31" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="union?-instance-method">
+      <div class="signature">
+        
+        def <strong>union?</strong>
+
+        <a class="method-permalink" href="#union?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/naqvis/crystal-xpath2/blob/24d75827ed36e7f7891acfa821c1a5afed03908f/src/xpath2/parse.cr#L22" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+</div>
+
+</body>
+</html>

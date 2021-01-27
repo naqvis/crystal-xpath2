@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 0.35.1">
+<meta name="crystal_docs.project_version" content="master">
+<meta name="crystal_docs.project_name" content="xpath2">
+
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/doc.js"></script>
+
+  <meta name="repository-name" content="xpath2">
+  <title>xpath2 master</title>
+  <script type="text/javascript">
+  CrystalDocs.base_path = "";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="index.html">
+          xpath2
+        </a>
+      </h1>
+
+      <span class="project-version">
+        master
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent " data-id="xpath2/XPath2" data-name="xpath2">
+      <a href="XPath2.html">XPath2</a>
+      
+        <ul>
+  
+  <li class=" " data-id="xpath2/XPath2/Expr" data-name="xpath2::expr">
+      <a href="XPath2/Expr.html">Expr</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/ExprResult" data-name="xpath2::exprresult">
+      <a href="XPath2/ExprResult.html">ExprResult</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/LogicalFunc" data-name="xpath2::logicalfunc">
+      <a href="XPath2/LogicalFunc.html">LogicalFunc</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/NodeIterator" data-name="xpath2::nodeiterator">
+      <a href="XPath2/NodeIterator.html">NodeIterator</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/NodeNavigator" data-name="xpath2::nodenavigator">
+      <a href="XPath2/NodeNavigator.html">NodeNavigator</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/NodeType" data-name="xpath2::nodetype">
+      <a href="XPath2/NodeType.html">NodeType</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/NumericFunc" data-name="xpath2::numericfunc">
+      <a href="XPath2/NumericFunc.html">NumericFunc</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/ParserNodeType" data-name="xpath2::parsernodetype">
+      <a href="XPath2/ParserNodeType.html">ParserNodeType</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/Predicate" data-name="xpath2::predicate">
+      <a href="XPath2/Predicate.html">Predicate</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/TokenType" data-name="xpath2::tokentype">
+      <a href="XPath2/TokenType.html">TokenType</a>
+      
+    </li>
+  
+  <li class=" " data-id="xpath2/XPath2/XPath2Exception" data-name="xpath2::xpath2exception">
+      <a href="XPath2/XPath2Exception.html">XPath2Exception</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1><a id="crystal-x-path2" class="anchor" href="#crystal-x-path2">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Crystal XPath2</h1>
+
+<p><img src="https://github.com/naqvis/crystal-xpath2/workflows/CI/badge.svg" alt="CI"/>
+<a href="https://github.com/naqvis/crystal-xpath2/releases"><img src="https://img.shields.io/github/release/naqvis/crystal-xpath2.svg" alt="GitHub release"/></a>
+<a href="https://naqvis.github.io/crystal-xpath2/"><img src="https://img.shields.io/badge/docs-available-brightgreen.svg" alt="Docs"/></a></p>
+
+<p><strong>Crystal XPath2</strong> Shard provide XPath implementation in <strong>Pure Crystal</strong>. Performs the compilation of XPath expression and provides mechanism to select/evaluate nodes from HTML or other documents using XPath expression</p>
+
+<h1><a id="supported-features" class="anchor" href="#supported-features">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Supported Features</h1>
+
+<h4><a id="the-basic-x-path-patterns." class="anchor" href="#the-basic-x-path-patterns.">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>The basic XPath patterns.</h4>
+
+<blockquote>The basic XPath patterns cover 90% of the cases that most stylesheets will need.</blockquote>
+
+<ul><li><code>node</code> : Selects all child elements with node Name of node.</li></ul>
+
+<ul><li><code>*</code> : Selects all child elements.</li></ul>
+
+<ul><li><code>@attr</code> : Selects the attribute attr.</li></ul>
+
+<ul><li><code>@*</code> : Selects all attributes.</li></ul>
+
+<ul><li><code>node()</code> : Matches an org.w3c.dom.Node.</li></ul>
+
+<ul><li><code>text()</code> : Matches a org.w3c.dom.Text node.</li></ul>
+
+<ul><li><code>comment()</code> : Matches a comment.</li></ul>
+
+<ul><li><code>.</code> : Selects the current node.</li></ul>
+
+<ul><li><code>..</code> : Selects the parent of current node.</li></ul>
+
+<ul><li><code>/</code> : Selects the document node.</li></ul>
+
+<ul><li><code>a[expr]</code> : Select only those nodes matching a which also satisfy the expression expr.</li></ul>
+
+<ul><li><code>a[n]</code> : Selects the nth matching node matching a When a filter's expression is a number, XPath selects based on position.</li></ul>
+
+<ul><li><code>a/b</code> : For each node matching a, add the nodes matching b to the result.</li></ul>
+
+<ul><li><code>a//b</code> : For each node matching a, add the descendant nodes matching b to the result.</li></ul>
+
+<ul><li><code>//b</code> : Returns elements in the entire document matching b.</li></ul>
+
+<ul><li><code>a|b</code> : All nodes matching a or b, union operation(not boolean or).</li></ul>
+
+<ul><li><code>(a, b, c)</code> : Evaluates each of its operands and concatenates the resulting sequences, in order, into a single result sequence</li></ul>
+
+<h4><a id="node-axes" class="anchor" href="#node-axes">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Node Axes</h4>
+
+<ul><li><code>child::*</code> : The child axis selects children of the current node.</li></ul>
+
+<ul><li><code>descendant::*</code> : The descendant axis selects descendants of the current node. It is equivalent to <code>"//"</code>.</li></ul>
+
+<ul><li><code>descendant-or-self::*</code> : Selects descendants including the current node.</li></ul>
+
+<ul><li><code>attribute::*</code> : Selects attributes of the current element. It is equivalent to <code>@*</code></li></ul>
+
+<ul><li><code>following-sibling::*</code> : Selects nodes after the current node.</li></ul>
+
+<ul><li><code>preceding-sibling::*</code> : Selects nodes before the current node.</li></ul>
+
+<ul><li><code>following::*</code> : Selects the first matching node following in document order, excluding descendants.</li></ul>
+
+<ul><li><code>preceding::*</code> : Selects the first matching node preceding in document order, excluding ancestors.</li></ul>
+
+<ul><li><code>parent::*</code> : Selects the parent if it matches. The <code>".."</code> pattern from the core is equivalent to 'parent::node()'.</li></ul>
+
+<ul><li><code>ancestor::*</code> : Selects matching ancestors.</li></ul>
+
+<ul><li><code>ancestor-or-self::*</code> : Selects ancestors including the current node.</li></ul>
+
+<ul><li><code>self::*</code> : Selects the current node. <code>'.'</code> is equivalent to <code>"self::node()"</code>.</li></ul>
+
+<h4><a id="expressions" class="anchor" href="#expressions">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Expressions</h4>
+
+<p>Shard supports three types: number, boolean, string.</p>
+
+<ul><li><code>path</code> : Selects nodes based on the path.</li></ul>
+
+<ul><li><code>a = b</code> : Standard comparisons.</li></ul>
+
+<pre><code class="language-crystal"><span class="o">*</span> a <span class="s">`=`</span> b	    <span class="s">`true`</span> <span class="k">if</span> a equals b.
+<span class="o">*</span> a <span class="s">`!=`</span> b	<span class="s">`true`</span> <span class="k">if</span> a is not equal to b.
+<span class="o">*</span> a <span class="s">`&lt;`</span> b	    <span class="s">`true`</span> <span class="k">if</span> a is less than b.
+<span class="o">*</span> a <span class="s">`&lt;=`</span> b	<span class="s">`true`</span> <span class="k">if</span> a is less than or equal to b.
+<span class="o">*</span> a <span class="s">`&gt;`</span> b	    <span class="s">`true`</span> <span class="k">if</span> a is greater than b.
+<span class="o">*</span> a <span class="s">`&gt;=`</span> b	<span class="s">`true`</span> <span class="k">if</span> a is greater than or equal to b.</code></pre>
+
+<ul><li><code>a + b</code> : Arithmetic expressions.</li></ul>
+
+<pre><code class="language-crystal"><span class="o">*</span> <span class="s">`- a`</span>	<span class="t">Unary</span> minus
+<span class="o">*</span> a <span class="s">`+`</span> b	<span class="t">Add</span>
+<span class="o">*</span> a <span class="s">`-`</span> b	<span class="t">Substract</span>
+<span class="o">*</span> a <span class="s">`*`</span> b	<span class="t">Multiply</span>
+<span class="o">*</span> a <span class="s">`div`</span> b	<span class="t">Divide</span>
+<span class="o">*</span> a <span class="s">`mod`</span> b	<span class="t">Floating</span> point mod, like <span class="t">Java</span>.</code></pre>
+
+<ul><li><code>a or b</code> : Boolean <code>or</code> operation.</li></ul>
+
+<ul><li><code>a and b</code> : Boolean <code>and</code> operation.</li></ul>
+
+<ul><li><code>(expr)</code> : Parenthesized expressions.</li></ul>
+
+<ul><li><code>fun(arg1, ..., argn)</code> : Function calls:</li></ul>
+
+<p>| Function | Supported |
+| --- | --- |
+<code>boolean()</code>| ✓ |
+<code>ceiling()</code>| ✓ |
+<code>choose()</code>| ✗ |
+<code>concat()</code>| ✓ |
+<code>contains()</code>| ✓ |
+<code>count()</code>| ✓ |
+<code>current()</code>| ✗ |
+<code>document()</code>| ✗ |
+<code>element-available()</code>| ✗ |
+<code>ends-with()</code>| ✓ |
+<code>false()</code>| ✓ |
+<code>floor()</code>| ✓ |
+<code>format-number()</code>| ✗ |
+<code>function-available()</code>| ✗ |
+<code>generate-id()</code>| ✗ |
+<code>id()</code>| ✗ |
+<code>key()</code>| ✗ |
+<code>lang()</code>| ✗ |
+<code>last()</code>| ✓ |
+<code>local-name()</code>| ✓ |
+<code>name()</code>| ✓ |
+<code>namespace-uri()</code>| ✓ |
+<code>normalize-space()</code>| ✓ |
+<code>not()</code>| ✓ |
+<code>number()</code>| ✓ |
+<code>position()</code>| ✓ |
+<code>replace()</code>| ✓ |
+<code>reverse()</code>| ✓ |
+<code>round()</code>| ✓ |
+<code>starts-with()</code>| ✓ |
+<code>string()</code>| ✓ |
+<code>string-length()</code>| ✓ |
+<code>substring()</code>| ✓ |
+<code>substring-after()</code>| ✓ |
+<code>substring-before()</code>| ✓ |
+<code>sum()</code>| ✓ |
+<code>system-property()</code>| ✗ |
+<code>translate()</code>| ✓ |
+<code>true()</code>| ✓ |
+<code>unparsed-entity-url()</code> | ✗ |</p>
+
+<h2><a id="installation" class="anchor" href="#installation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Installation</h2>
+
+<ol><li>Add the dependency to your <code>shard.yml</code>:</li></ol>
+
+<p><code></code>`yaml
+   dependencies:</p>
+
+<pre><code class="language-crystal"> xpath2:
+   github: naqvis/crystal-xpath2</code></pre>
+
+<p><code></code>`</p>
+
+<ol><li>Run <code>shards install</code></li></ol>
+
+<h2><a id="usage" class="anchor" href="#usage">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Usage</h2>
+
+<p>refer to <code>spec</code> for usage examples or refer to <a href="https://github.com/naqvis/crystal-html5">Crystal HTML5</a> and <a href="https://github.com/naqvis/json-xpath">JSON XPath</a> for implementation details.</p>
+
+<h2><a id="development" class="anchor" href="#development">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Development</h2>
+
+<p>To run all tests:</p>
+
+<pre><code class="language-crystal">crystal spec</code></pre>
+
+<h2><a id="contributing" class="anchor" href="#contributing">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Contributing</h2>
+
+<ol><li>Fork it (&lt;https://github.com/naqvis/crystal-xpath2/fork>)</li><li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li><li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li><li>Push to the branch (<code>git push origin my-new-feature</code>)</li><li>Create a new Pull Request</li></ol>
+
+<h2><a id="contributors" class="anchor" href="#contributors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Contributors</h2>
+
+<ul><li><a href="https://github.com/naqvis">Ali Naqvi</a> - creator and maintainer</li></ul>
+</div>
+</body>
+</html>
