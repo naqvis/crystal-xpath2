@@ -29,15 +29,7 @@ module XPath2
   def self.do_eval(root : TNode, str)
     nav = TNodeNavigator.new(root, root)
     expr = compile(str)
-    v = expr.evaluate(nav)
-    v
-    # nodes = Array(TNodeNavigator).new
-    # if (iter = v.as?(NodeIterator))
-    #   while iter.move_next
-    #     nodes << iter.current.as(TNodeNavigator)
-    #   end
-    # end
-    # nodes
+    expr.evaluate(nav)
   end
 
   def self.do_evals(root : TNode, exp, expected)

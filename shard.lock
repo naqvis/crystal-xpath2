@@ -1,6 +1,0 @@
-version: 2.0
-shards:
-  fnv:
-    git: https://github.com/naqvis/crystal-fnv.git
-    version: 0.1.1
-

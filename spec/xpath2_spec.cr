@@ -453,7 +453,6 @@ module XPath2
     end
 
     it "Test Evaluate method" do
-      do_evals(HTML, "count(//ul/li)", 4_f64)
       do_evals(HTML, "//html/@lang", ["en"])
       do_evals(HTML, "//title/text()", ["Hello"])
     end
