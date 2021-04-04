@@ -289,9 +289,9 @@ module XPath2
     Predicate.new { |n|
       if typ == n.try &.node_type || typ == NodeType::Any || typ == NodeType::Text
         if nametest
-          return true if root.local_name == n.try &.local_name && root.prefix == n.try &.prefix
+          next true if root.local_name == n.try &.local_name && root.prefix == n.try &.prefix
         else
-          return true
+          next true
         end
       end
       false

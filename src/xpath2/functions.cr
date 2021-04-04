@@ -114,10 +114,10 @@ module XPath2
           v = t.current
         else
           v = arg.not_nil!.select(t)
-          return "" if v.nil?
+          next "" if v.nil?
         end
         ns = v.prefix
-        return v.local_name if ns.empty?
+        next v.local_name if ns.empty?
         "#{ns}:#{v.local_name}"
       end
     end
@@ -128,7 +128,7 @@ module XPath2
           v = t.current
         else
           v = arg.not_nil!.select(t)
-          return "" if v.nil?
+          next "" if v.nil?
         end
         v.local_name
       end
@@ -141,7 +141,7 @@ module XPath2
         else
           # Get the first node in the node-set if specified
           v = arg.not_nil!.select(t)
-          return "" if v.nil?
+          next "" if v.nil?
         end
         if v.responds_to?(:namespace_url)
           v.namespace_url
@@ -198,7 +198,7 @@ module XPath2
           if (node = typ.select(t))
             m = node.value
           else
-            return false
+            next false
           end
         else
           raise XPath2Exception.new("starts-with() function argument type must be string")
@@ -223,7 +223,7 @@ module XPath2
           if (node = typ.select(t))
             m = node.value
           else
-            return false
+            next false
           end
         else
           raise XPath2Exception.new("ends-with() function argument type must be string")
@@ -248,7 +248,7 @@ module XPath2
           if (node = typ.select(t))
             m = node.value
           else
-            return false
+            next false
           end
         else
           raise XPath2Exception.new("contains() function argument type must be string")
@@ -294,7 +294,7 @@ module XPath2
           if (node = typ.select(t))
             m = node.value
           else
-            return ""
+            next ""
           end
         else
           #
@@ -307,7 +307,7 @@ module XPath2
               if m.size - start.to_i < len.to_i
                 raise XPath2Exception.new("substring() function start and length argument out of range")
               end
-              return m[start.to_i...(len + start).to_i] if len > 0
+              next m[start.to_i...(len + start).to_i] if len > 0
             else
               raise XPath2Exception.new("substring() function second argument type must be int")
             end
@@ -331,7 +331,7 @@ module XPath2
           if (node = v.select(t))
             str = node.value
           else
-            return ""
+            next ""
           end
         else
           #
@@ -345,14 +345,14 @@ module XPath2
           if (node = v.select(t))
             word = node.value
           else
-            return ""
+            next ""
           end
         else
           #
         end
-        return "" if word.empty?
+        next "" if word.empty?
         if (i = str.index(word))
-          return str[i + word.size..] if after
+          next str[i + word.size..] if after
           str[...i]
         else
           ""
@@ -471,7 +471,7 @@ module XPath2
       end
       i = list.size
       IteratorFunc.new {
-        return nil if i <= 0
+        next nil if i <= 0
         i -= 1
         node = list[i]
         node

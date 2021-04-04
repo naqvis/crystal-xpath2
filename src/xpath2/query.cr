@@ -88,13 +88,15 @@ module XPath2
           @iterator = IteratorFunc.new {
             if first && @self_
               first = false
-              return node if @predicate.call(node)
+              next node if @predicate.call(node)
             end
+            val = nil
             while node.move_to_parent
               next unless @predicate.call(node)
-              return node
+              val = node
+              break
             end
-            nil
+            val
           }
         end
 
@@ -139,8 +141,8 @@ module XPath2
           @iterator = IteratorFunc.new {
             loop do
               on_attr = node.move_to_next_attribute
-              return nil unless on_attr
-              return node if @predicate.call(node)
+              break nil unless on_attr
+              break node if @predicate.call(node)
             end
           }
         end
@@ -187,9 +189,9 @@ module XPath2
           first = true
           @iterator = IteratorFunc.new {
             loop do
-              return nil if (first && !node.move_to_child) || (!first && !node.move_to_next)
+              break nil if (first && !node.move_to_child) || (!first && !node.move_to_next)
               first = false
-              return node if @predicate.call(node)
+              break node if @predicate.call(node)
             end
           }
         end
@@ -247,7 +249,7 @@ module XPath2
               if @predicate.call(node)
                 @posit = 1
                 positmap[level] = 1
-                return node
+                next node
               end
             end
 
@@ -256,17 +258,22 @@ module XPath2
                 level += 1
                 positmap[level] = 0
               else
+                moveout = false
                 loop do
-                  return nil if level == 0
+                  if level == 0
+                    moveout = true
+                    break
+                  end
                   break if node.move_to_next
                   node.move_to_parent
                   level -= 1
                 end
+                break nil if moveout
               end
               if @predicate.call(node)
                 positmap[level] = positmap[level] + 1
                 @posit = positmap[level]
-                return node
+                break node
               end
             end
           }
@@ -319,10 +326,10 @@ module XPath2
           if @sibling
             @iterator = IteratorFunc.new {
               loop do
-                return nil unless node.move_to_next
+                break nil unless node.move_to_next
                 if @predicate.call(node)
                   @posit += 1
-                  return node
+                  break node
                 end
               end
             }
@@ -331,9 +338,14 @@ module XPath2
             @iterator = IteratorFunc.new {
               loop do
                 if q.nil?
+                  moved = false
                   while !node.move_to_next
-                    return nil unless node.move_to_parent
+                    unless node.move_to_parent
+                      moved = true
+                      break
+                    end
                   end
+                  break nil if moved
                   q = DescendantQuery.new(
                     self_: true,
                     input: ContextQuery.new,
@@ -343,7 +355,7 @@ module XPath2
                 end
                 if (cnode = q.not_nil!.select(iter))
                   @posit = q.not_nil!.position
-                  return cnode
+                  break cnode
                 end
                 q = nil
               end
@@ -397,13 +409,15 @@ module XPath2
           if @sibling
             @iterator = IteratorFunc.new {
               loop do
+                moved = false
                 while !node.move_to_previous
-                  return nil
+                  moved = true
+                  break
                 end
-
+                break nil if moved
                 if @predicate.call(node)
                   @posit += 1
-                  return node
+                  break node
                 end
               end
             }
@@ -412,10 +426,15 @@ module XPath2
             @iterator = IteratorFunc.new {
               loop do
                 if q.nil?
+                  moved = false
                   while !node.move_to_previous
-                    return nil unless node.move_to_parent
+                    unless node.move_to_parent
+                      moved = true
+                      break
+                    end
                     @posit = 0
                   end
+                  break nil if moved
                   q = DescendantQuery.new(
                     self_: true,
                     input: ContextQuery.new,
@@ -425,7 +444,7 @@ module XPath2
                 end
                 if (cnode = q.try &.select(iter))
                   @posit += 1
-                  return cnode
+                  break cnode
                 end
                 q = nil
               end
@@ -797,7 +816,7 @@ module XPath2
           end
         end
         @iterator = IteratorFunc.new {
-          return nil if i >= list.size
+          next nil if i >= list.size
           node = list[i]
           i += 1
           node
@@ -867,7 +886,7 @@ module XPath2
         end
         i = 0
         @iterator = IteratorFunc.new {
-          return nil if i >= list.size
+          next nil if i >= list.size
           node = list[i]
           i += 1
           node

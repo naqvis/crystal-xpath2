@@ -1,6 +1,6 @@
 # XPath2 Shard provide XPath implementation in pure Crystal. Performs the compilation of XPath expression and provides mechanism to select nodes from HTML or other documents using XPath expression
 module XPath2
-  VERSION = "0.1.2"
+  VERSION = "0.1.3"
 
   class XPath2Exception < Exception
   end
