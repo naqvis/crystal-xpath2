@@ -409,6 +409,509 @@ module XPath2
       pp arr
     end
 
+    it "Test zero-arg normalize-space and string-length" do
+      # normalize-space() with no args should use context node's string value
+      # The h1 node has "\nThis is a H1\n" as text, normalize-space should give "This is a H1"
+      n = select_node(HTML, "//h1[normalize-space()='This is a H1']")
+      fail "normalize-space() zero-arg: expected h1 node" if n.nil?
+      n.data.should eq("h1")
+
+      # string-length() with no args should return length of context node's string value
+      # title text is "Hello" = 5 chars
+      n = select_node(HTML, "//title[string-length()=5]")
+      fail "string-length() zero-arg: expected title node" if n.nil?
+      n.data.should eq("title")
+
+      # Combined: string-length of normalize-space of context node
+      val = do_eval(HTML, "string-length(normalize-space(' hello world '))")
+      val.should eq(11_f64)
+    end
+
+    it "Test matches() function" do
+      # Basic regex match
+      val = do_eval(HTML, "matches('hello world', 'hello')")
+      val.should eq(true)
+
+      val = do_eval(HTML, "matches('hello world', '^world')")
+      val.should eq(false)
+
+      val = do_eval(HTML, "matches('hello world', 'world$')")
+      val.should eq(true)
+
+      # Case-insensitive flag
+      val = do_eval(HTML, "matches('Hello', 'hello', 'i')")
+      val.should eq(true)
+
+      # Use in predicate: find <a> elements whose href matches a pattern
+      list = select_nodes(HTML, "//a[matches(@href, '^/a')]")
+      list.size.should eq(2) # /about, /account
+
+      # Regex with character class
+      list = select_nodes(HTML, "//a[matches(@href, '/a[bc]')]")
+      list.size.should eq(2) # /about, /account
+
+      # No match
+      list = select_nodes(HTML, "//a[matches(@href, '^https')]")
+      list.size.should eq(0)
+
+      # Error: too few args
+      expect_raises(XPath2Exception, "matches() must have two or three arguments") do
+        do_eval(HTML, "matches('hello')")
+      end
+    end
+
+    it "Test lower-case() and upper-case() functions" do
+      val = do_eval(HTML, "lower-case('HELLO')")
+      val.should eq("hello")
+
+      val = do_eval(HTML, "upper-case('hello')")
+      val.should eq("HELLO")
+
+      # Mixed case
+      val = do_eval(HTML, "lower-case('HeLLo WoRLd')")
+      val.should eq("hello world")
+
+      # Use in predicate: case-insensitive name match
+      n = select_node(HTML, "//*[lower-case(name())='title']")
+      fail "lower-case() in predicate: expected title node" if n.nil?
+      n.data.should eq("title")
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "lower-case() must have exactly one argument") do
+        do_eval(HTML, "lower-case()")
+      end
+      expect_raises(XPath2Exception, "upper-case() must have exactly one argument") do
+        do_eval(HTML, "upper-case()")
+      end
+    end
+
+    it "Test lang() function" do
+      # The html element has lang="en"
+      val = do_eval(HTML, "lang('en')")
+      val.should eq(true)
+
+      # Should not match a different language
+      val = do_eval(HTML, "lang('fr')")
+      val.should eq(false)
+
+      # lang() should match subtags: "en" matches "en-US" style
+      # Our test HTML has lang="en", so "en" should match exactly
+      n = select_node(HTML, "//*[lang('en')]")
+      fail "lang() in predicate: expected html node" if n.nil?
+      n.data.should eq("html")
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "lang() must have exactly one argument") do
+        do_eval(HTML, "lang()")
+      end
+    end
+
+    it "Test id() function" do
+      # id('1') should find the <a> element with id="1"
+      list = select_nodes(HTML, "id('1')")
+      list.size.should eq(1)
+      list[0].data.should eq("a")
+
+      # id with multiple space-separated IDs
+      list = select_nodes(HTML, "id('1 2')")
+      list.size.should eq(2)
+
+      # id with non-existent ID
+      list = select_nodes(HTML, "id('nonexistent')")
+      list.size.should eq(0)
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "id() must have exactly one argument") do
+        do_eval(HTML, "id()")
+      end
+    end
+
+    it "Test generate-id() function" do
+      # generate-id() should return a non-empty string
+      val = do_eval(HTML, "generate-id(//title)")
+      val.should be_a(String)
+      val.as(String).should_not be_empty
+      val.as(String).starts_with?("id").should be_true
+
+      # Same node should produce same id
+      val2 = do_eval(HTML, "generate-id(//title)")
+      val.should eq(val2)
+
+      # Different nodes should produce different ids
+      val3 = do_eval(HTML, "generate-id(//body)")
+      val.should_not eq(val3)
+
+      # Zero-arg form should work (uses context node)
+      val4 = do_eval(HTML, "generate-id()")
+      val4.should be_a(String)
+      val4.as(String).should_not be_empty
+    end
+
+    it "Test function-available() function" do
+      val = do_eval(HTML, "function-available('contains')")
+      val.should eq(true)
+
+      val = do_eval(HTML, "function-available('matches')")
+      val.should eq(true)
+
+      val = do_eval(HTML, "function-available('nonexistent')")
+      val.should eq(false)
+
+      val = do_eval(HTML, "function-available('document')")
+      val.should eq(false)
+    end
+
+    it "Test XPath 2.0 tokenize() function" do
+      # Basic tokenize with regex
+      val = do_eval(HTML, "tokenize('a, b, c', ',\\s*')")
+      val.should eq("a b c")
+
+      # Simple delimiter
+      val = do_eval(HTML, "tokenize('one-two-three', '-')")
+      val.should eq("one two three")
+
+      # Single token (no match for delimiter)
+      val = do_eval(HTML, "tokenize('hello', ',')")
+      val.should eq("hello")
+
+      # Multiple spaces as delimiter
+      val = do_eval(HTML, "tokenize('a  b  c', '\\s+')")
+      val.should eq("a b c")
+
+      # Tokenize with pipe delimiter
+      val = do_eval(HTML, "tokenize('x|y|z', '\\|')")
+      val.should eq("x y z")
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "tokenize() must have exactly two arguments") do
+        do_eval(HTML, "tokenize('hello')")
+      end
+    end
+
+    it "Test XPath 2.0 string-join() function" do
+      # Join attribute values with comma
+      val = do_eval(HTML, "string-join(//a/@id, ',')")
+      val.should eq("1,2,3")
+
+      # Join with empty separator
+      val = do_eval(HTML, "string-join(//a/@id, '')")
+      val.should eq("123")
+
+      # Join with multi-char separator
+      val = do_eval(HTML, "string-join(//a/@id, ' - ')")
+      val.should eq("1 - 2 - 3")
+
+      # Join single node — should return just the value
+      val = do_eval(HTML, "string-join(//title, ',')")
+      val.should eq("Hello")
+
+      # Join empty node-set — should return empty string
+      val = do_eval(HTML, "string-join(//nonexistent, ',')")
+      val.should eq("")
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "string-join() must have exactly two arguments") do
+        do_eval(HTML, "string-join(//a)")
+      end
+    end
+
+    it "Test XPath 2.0 abs() function" do
+      val = do_eval(HTML, "abs(-5)")
+      val.should eq(5_f64)
+
+      val = do_eval(HTML, "abs(3.14)")
+      val.should eq(3.14)
+
+      val = do_eval(HTML, "abs(0)")
+      val.should eq(0_f64)
+
+      # abs of negative float
+      val = do_eval(HTML, "abs(-2.7)")
+      val.should eq(2.7)
+
+      # abs in arithmetic expression
+      val = do_eval(HTML, "abs(3 - 10)")
+      val.should eq(7_f64)
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "abs() must have exactly one argument") do
+        do_eval(HTML, "abs()")
+      end
+    end
+
+    it "Test XPath 2.0 compare() function" do
+      val = do_eval(HTML, "compare('abc', 'abc')")
+      val.should eq(0_f64)
+
+      val = do_eval(HTML, "compare('abc', 'def')")
+      val.should eq(-1_f64)
+
+      val = do_eval(HTML, "compare('def', 'abc')")
+      val.should eq(1_f64)
+
+      # Compare empty strings
+      val = do_eval(HTML, "compare('', '')")
+      val.should eq(0_f64)
+
+      # Compare with empty
+      val = do_eval(HTML, "compare('a', '')")
+      val.should eq(1_f64)
+
+      val = do_eval(HTML, "compare('', 'a')")
+      val.should eq(-1_f64)
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "compare() must have exactly two arguments") do
+        do_eval(HTML, "compare('a')")
+      end
+    end
+
+    it "Test XPath 2.0 empty() and exists() functions" do
+      # empty() on non-empty node-set
+      val = do_eval(HTML, "empty(//title)")
+      val.should eq(false)
+
+      # empty() on empty node-set
+      val = do_eval(HTML, "empty(//nonexistent)")
+      val.should eq(true)
+
+      # exists() on non-empty node-set
+      val = do_eval(HTML, "exists(//title)")
+      val.should eq(true)
+
+      # exists() on empty node-set
+      val = do_eval(HTML, "exists(//nonexistent)")
+      val.should eq(false)
+
+      # empty/exists on attributes
+      val = do_eval(HTML, "empty(//a/@href)")
+      val.should eq(false)
+
+      val = do_eval(HTML, "empty(//a/@nonexistent)")
+      val.should eq(true)
+
+      val = do_eval(HTML, "exists(//a/@href)")
+      val.should eq(true)
+
+      val = do_eval(HTML, "exists(//a/@nonexistent)")
+      val.should eq(false)
+
+      # Use in predicates
+      n = select_node(HTML, "//ul[exists(li)]")
+      fail "exists() in predicate: expected ul" if n.nil?
+      n.data.should eq("ul")
+
+      n = select_node(HTML, "//ul[empty(span)]")
+      fail "empty() in predicate: expected ul" if n.nil?
+      n.data.should eq("ul")
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "empty() must have exactly one argument") do
+        do_eval(HTML, "empty()")
+      end
+      expect_raises(XPath2Exception, "exists() must have exactly one argument") do
+        do_eval(HTML, "exists()")
+      end
+    end
+
+    it "Test XPath 2.0 distinct-values() function" do
+      # All <a> ids are unique, so distinct-values should return all 3
+      nodes = select_nodes(HTML, "distinct-values(//a/@id)")
+      nodes.size.should eq(3)
+
+      # Test with //a elements (3 elements, all different values)
+      nodes = select_nodes(HTML, "distinct-values(//a)")
+      nodes.size.should eq(3)
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "distinct-values() must have exactly one argument") do
+        select_nodes(HTML, "distinct-values()")
+      end
+    end
+
+    it "Test XPath 2.0 subsequence() function" do
+      # Get li elements starting from position 2 (no length — get all remaining)
+      nodes = select_nodes(HTML, "subsequence(//li, 2)")
+      nodes.size.should eq(3) # li[2], li[3], li[4]
+
+      # Get 2 li elements starting from position 2
+      nodes = select_nodes(HTML, "subsequence(//li, 2, 2)")
+      nodes.size.should eq(2) # li[2], li[3]
+
+      # Get first element only
+      nodes = select_nodes(HTML, "subsequence(//li, 1, 1)")
+      nodes.size.should eq(1)
+
+      # Get last element
+      nodes = select_nodes(HTML, "subsequence(//li, 4, 1)")
+      nodes.size.should eq(1)
+
+      # Start beyond sequence length — empty result
+      nodes = select_nodes(HTML, "subsequence(//li, 10)")
+      nodes.size.should eq(0)
+
+      # Length of 0 — empty result
+      nodes = select_nodes(HTML, "subsequence(//li, 1, 0)")
+      nodes.size.should eq(0)
+
+      # On <a> elements
+      nodes = select_nodes(HTML, "subsequence(//a, 2, 1)")
+      nodes.size.should eq(1)
+      nodes[0].data.should eq("a")
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "subsequence() must have two or three arguments") do
+        select_nodes(HTML, "subsequence(//li)")
+      end
+    end
+
+    it "Test XPath 2.0 remove() function" do
+      # Remove the 2nd li element
+      nodes = select_nodes(HTML, "remove(//li, 2)")
+      nodes.size.should eq(3) # li[1], li[3], li[4]
+
+      # Remove the 1st element
+      nodes = select_nodes(HTML, "remove(//li, 1)")
+      nodes.size.should eq(3) # li[2], li[3], li[4]
+
+      # Remove the last element
+      nodes = select_nodes(HTML, "remove(//li, 4)")
+      nodes.size.should eq(3) # li[1], li[2], li[3]
+
+      # Remove position beyond range — returns all
+      nodes = select_nodes(HTML, "remove(//li, 99)")
+      nodes.size.should eq(4)
+
+      # Remove from <a> elements
+      nodes = select_nodes(HTML, "remove(//a, 1)")
+      nodes.size.should eq(2)
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "remove() must have exactly two arguments") do
+        select_nodes(HTML, "remove(//li)")
+      end
+    end
+
+    it "Test XPath 2.0 insert-before() function" do
+      # Insert title before 2nd li
+      nodes = select_nodes(HTML, "insert-before(//li, 2, //title)")
+      nodes.size.should eq(5) # li[1], title, li[2], li[3], li[4]
+      nodes[0].data.should eq("li")
+      nodes[1].data.should eq("title")
+      nodes[2].data.should eq("li")
+
+      # Insert at position 1 (before first)
+      nodes = select_nodes(HTML, "insert-before(//li, 1, //title)")
+      nodes.size.should eq(5)
+      nodes[0].data.should eq("title")
+      nodes[1].data.should eq("li")
+
+      # Insert at position beyond length (append at end)
+      nodes = select_nodes(HTML, "insert-before(//li, 99, //title)")
+      nodes.size.should eq(5)
+      nodes[4].data.should eq("title")
+
+      # Insert multiple nodes
+      nodes = select_nodes(HTML, "insert-before(//li, 2, //a)")
+      nodes.size.should eq(7) # li[1], a[1], a[2], a[3], li[2], li[3], li[4]
+      nodes[0].data.should eq("li")
+      nodes[1].data.should eq("a")
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "insert-before() must have exactly three arguments") do
+        select_nodes(HTML, "insert-before(//li, 2)")
+      end
+    end
+
+    it "Test XPath 2.0 index-of() function" do
+      # Find position of the <a> with id="2"
+      val = do_eval(HTML, "index-of(//a/@id, '2')")
+      val.should eq(2_f64)
+
+      # Find first item
+      val = do_eval(HTML, "index-of(//a/@id, '1')")
+      val.should eq(1_f64)
+
+      # Find last item
+      val = do_eval(HTML, "index-of(//a/@id, '3')")
+      val.should eq(3_f64)
+
+      # Not found
+      val = do_eval(HTML, "index-of(//a/@id, '99')")
+      val.should eq(0_f64)
+
+      # Index-of on element text values
+      val = do_eval(HTML, "index-of(//a, 'about')")
+      val.should eq(2_f64)
+
+      # Index-of on href attributes
+      val = do_eval(HTML, "index-of(//a/@href, '/about')")
+      val.should eq(2_f64)
+
+      # Error: wrong arg count
+      expect_raises(XPath2Exception, "index-of() must have exactly two arguments") do
+        do_eval(HTML, "index-of(//a)")
+      end
+    end
+
+    it "Test variable binding" do
+      # String variable in attribute comparison
+      vars = {"target" => "1".as(ExprResult)}
+      n = select_node_with_vars(HTML, "//a[@id=$target]", vars)
+      fail "variable binding: expected a node" if n.nil?
+      n.data.should eq("a")
+
+      # Verify it matched the right one
+      list = select_nodes_with_vars(HTML, "//a[@id=$target]", vars)
+      list.size.should eq(1)
+
+      # String variable for href matching
+      vars = {"path" => "/about".as(ExprResult)}
+      n = select_node_with_vars(HTML, "//a[@href=$path]", vars)
+      fail "variable binding: expected a node for href" if n.nil?
+      n.data.should eq("a")
+
+      # Numeric variable in position predicate
+      vars = {"pos" => 2_f64.as(ExprResult)}
+      n = select_node_with_vars(HTML, "//li[$pos]", vars)
+      fail "variable binding: expected li node" if n.nil?
+
+      # Variable in function argument
+      vars = {"prefix" => "/a".as(ExprResult)}
+      list = select_nodes_with_vars(HTML, "//a[starts-with(@href, $prefix)]", vars)
+      list.size.should eq(2) # /about, /account
+
+      # Variable in evaluate
+      vars = {"x" => 5_f64.as(ExprResult)}
+      val = do_eval_with_vars(HTML, "$x + 10", vars)
+      val.should eq(15_f64)
+
+      # Variable in string function
+      vars = {"word" => "Hello".as(ExprResult)}
+      val = do_eval_with_vars(HTML, "string-length($word)", vars)
+      val.should eq(5_f64)
+
+      # Multiple variables
+      vars = {"lo" => 1_f64.as(ExprResult), "hi" => 3_f64.as(ExprResult)}
+      list = select_nodes_with_vars(HTML, "//a[@id>=$lo and @id<=$hi]", vars)
+      list.size.should eq(3)
+
+      # Boolean variable
+      vars = {"flag" => true.as(ExprResult)}
+      val = do_eval_with_vars(HTML, "$flag", vars)
+      val.should eq(true)
+
+      # Undeclared variable should raise
+      expect_raises(XPath2Exception, "undeclared variable") do
+        do_eval_with_vars(HTML, "$undefined", Hash(String, ExprResult).new)
+      end
+
+      # Compile without variables still works (backward compatible)
+      n = select_node(HTML, "//title")
+      fail "non-variable compile should still work" if n.nil?
+      n.data.should eq("title")
+    end
+
     it "Test Transform functions" do
       nodes = select_nodes(HTML, "reverse(//li)")
       expected = ["", "login", "about", "Home"]

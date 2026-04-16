@@ -54,6 +54,34 @@ module XPath2
     v.should eq(expected)
   end
 
+  # Variable-aware helpers
+  def self.select_node_with_vars(root : TNode, str, vars : Hash(String, ExprResult))
+    nav = TNodeNavigator.new(root, root)
+    expr = compile(str, vars)
+    n = expr.select(nav)
+    if n.move_next
+      return n.current.as(TNodeNavigator).curr.not_nil!
+    end
+    nil
+  end
+
+  def self.select_nodes_with_vars(root : TNode, str, vars : Hash(String, ExprResult))
+    nav = TNodeNavigator.new(root, root)
+    expr = compile(str, vars)
+    t = expr.select(nav)
+    arr = Array(TNode).new
+    while t.move_next
+      arr << t.current.as(TNodeNavigator).curr.not_nil!
+    end
+    arr
+  end
+
+  def self.do_eval_with_vars(root : TNode, str, vars : Hash(String, ExprResult))
+    nav = TNodeNavigator.new(root, root)
+    expr = compile(str, vars)
+    expr.evaluate(nav)
+  end
+
   record Attribute, key : String, value : String
 
   class TNode

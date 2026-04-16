@@ -1,15 +1,11 @@
 name: xpath2
-version: 0.1.3
+version: 0.2.0
 
 authors:
   - Ali Naqvi <syed.alinaqvi@gmail.com>
 description: |
- XPath implementation in Crystal
+  Pure Crystal XPath 1.0/2.0 engine for selecting and evaluating nodes from HTML/XML documents.
 
-crystal: ">= 0.36.0, < 2.0.0"
+crystal: ~> 1.0
 
 license: MIT
-
-dependencies:
-  fnv:
-    github: naqvis/crystal-fnv

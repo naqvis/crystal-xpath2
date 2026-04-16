@@ -1,5 +1,3 @@
-require "fnv"
-
 module XPath2
   # An XPath query interface
   private module Query
@@ -179,11 +177,11 @@ module XPath2
       @iterator = nil
     end
 
-    def select(t : QueryIterator) : NodeNavigator?
+    def select(iter : QueryIterator) : NodeNavigator?
       loop do
         if @iterator.nil?
           @posit = 0
-          xnode = @input.select(t)
+          xnode = @input.select(iter)
           return nil if xnode.nil?
           node = xnode.not_nil!.copy
           first = true
@@ -195,7 +193,7 @@ module XPath2
             end
           }
         end
-        if (iter = @iterator) && (n = iter.call)
+        if (t = @iterator) && (n = t.call)
           @posit += 1
           return n
         end
@@ -241,14 +239,14 @@ module XPath2
           return nil if xnode.nil?
           node = xnode.not_nil!.copy
           level = 0
-          positmap = Hash(Int32, Int32).new
+          positstack = Array(Int32).new(8, 0) # pre-allocate small stack
           first = true
           @iterator = IteratorFunc.new {
             if first && @self_
               first = false
               if @predicate.call(node)
                 @posit = 1
-                positmap[level] = 1
+                positstack[0] = 1 if positstack.size > 0
                 next node
               end
             end
@@ -256,7 +254,11 @@ module XPath2
             loop do
               if node.move_to_child
                 level += 1
-                positmap[level] = 0
+                if level >= positstack.size
+                  positstack << 0
+                else
+                  positstack[level] = 0
+                end
               else
                 moveout = false
                 loop do
@@ -271,8 +273,8 @@ module XPath2
                 break nil if moveout
               end
               if @predicate.call(node)
-                positmap[level] = positmap[level] + 1
-                @posit = positmap[level]
+                positstack[level] = positstack[level] + 1
+                @posit = positstack[level]
                 break node
               end
             end
@@ -334,30 +336,34 @@ module XPath2
               end
             }
           else
-            q : DescendantQuery? = nil
+            # Reuse a single DescendantQuery + ContextQuery, resetting via evaluate
+            desc = DescendantQuery.new(
+              self_: true,
+              input: ContextQuery.new,
+              predicate: @predicate
+            )
+            desc_active = false
             @iterator = IteratorFunc.new {
               loop do
-                if q.nil?
-                  moved = false
-                  while !node.move_to_next
-                    unless node.move_to_parent
-                      moved = true
-                      break
-                    end
+                if desc_active
+                  if (cnode = desc.select(iter))
+                    @posit = desc.position
+                    break cnode
                   end
-                  break nil if moved
-                  q = DescendantQuery.new(
-                    self_: true,
-                    input: ContextQuery.new,
-                    predicate: @predicate
-                  )
-                  iter.current.move_to(node)
                 end
-                if (cnode = q.not_nil!.select(iter))
-                  @posit = q.not_nil!.position
-                  break cnode
+                # Move to next sibling (or parent's sibling)
+                moved = false
+                while !node.move_to_next
+                  unless node.move_to_parent
+                    moved = true
+                    break
+                  end
                 end
-                q = nil
+                break nil if moved
+                # Reset the descendant query for the new subtree
+                desc.evaluate(iter)
+                desc_active = true
+                iter.current.move_to(node)
               end
             }
           end
@@ -422,31 +428,35 @@ module XPath2
               end
             }
           else
-            q : Query? = nil
+            # Reuse a single DescendantQuery + ContextQuery, resetting via evaluate
+            desc = DescendantQuery.new(
+              self_: true,
+              input: ContextQuery.new,
+              predicate: @predicate
+            )
+            desc_active = false
             @iterator = IteratorFunc.new {
               loop do
-                if q.nil?
-                  moved = false
-                  while !node.move_to_previous
-                    unless node.move_to_parent
-                      moved = true
-                      break
-                    end
-                    @posit = 0
+                if desc_active
+                  if (cnode = desc.select(iter))
+                    @posit += 1
+                    break cnode
                   end
-                  break nil if moved
-                  q = DescendantQuery.new(
-                    self_: true,
-                    input: ContextQuery.new,
-                    predicate: @predicate
-                  )
-                  iter.current.move_to(node)
                 end
-                if (cnode = q.try &.select(iter))
-                  @posit += 1
-                  break cnode
+                # Move to previous sibling (or parent's previous)
+                moved = false
+                while !node.move_to_previous
+                  unless node.move_to_parent
+                    moved = true
+                    break
+                  end
+                  @posit = 0
                 end
-                q = nil
+                break nil if moved
+                # Reset the descendant query for the new subtree
+                desc.evaluate(iter)
+                desc_active = true
+                iter.current.move_to(node)
               end
             }
           end
@@ -691,6 +701,35 @@ module XPath2
     end
   end
 
+  # VariableQuery resolves a variable reference ($name) at evaluation time
+  # by looking up the variable name in the bound variables hash.
+  private class VariableQuery
+    include Query
+
+    def initialize(@name : String, @bindings : Hash(String, ExprResult))
+    end
+
+    def select(iter : QueryIterator) : NodeNavigator?
+      nil
+    end
+
+    def evaluate(iter : QueryIterator) : ExprResult
+      if @bindings.has_key?(@name)
+        @bindings[@name]
+      else
+        raise XPath2Exception.new("undeclared variable $#{@name}")
+      end
+    end
+
+    def clone : Query
+      VariableQuery.new(@name, @bindings)
+    end
+
+    def test(n : NodeNavigator?) : Bool
+      true
+    end
+  end
+
   alias LogicalFunc = (QueryIterator, ExprResult, ExprResult) -> ExprResult
   alias NumericFunc = (ExprResult, ExprResult) -> ExprResult
 
@@ -771,8 +810,7 @@ module XPath2
         if @is_or
           loop do
             if (xnode = @left.select(iter))
-              node = xnode.copy
-              list << node
+              list << xnode.copy
             else
               break
             end
@@ -780,21 +818,21 @@ module XPath2
           iter.current.move_to(root)
           loop do
             if (xnode = @right.select(iter))
-              node = xnode.copy
-              list << node
+              list << xnode.copy
             else
               break
             end
           end
         else
-          m = Array(NodeNavigator).new
-          n = Array(NodeNavigator).new
+          # Use hash-based intersection: O(n+m) instead of O(n×m)
+          left_nodes = Array(NodeNavigator).new
+          left_hashes = Set(UInt64).new
 
           loop do
             if (xnode = @left.select(iter))
               node = xnode.copy
-              m << node
-              list = m
+              left_nodes << node
+              left_hashes << XPath2.get_hash_code(node.copy)
             else
               break
             end
@@ -803,15 +841,12 @@ module XPath2
           loop do
             if (xnode = @right.select(iter))
               node = xnode.copy
-              n << node
-              list = n
+              code = XPath2.get_hash_code(node.copy)
+              if left_hashes.includes?(code)
+                list << node
+              end
             else
               break
-            end
-          end
-          m.each do |k|
-            n.each do |j|
-              list << k if k == j
             end
           end
         end
@@ -846,57 +881,49 @@ module XPath2
     end
   end
 
-  # UnionQuery is an XPath Union operator expression
+  # UnionQuery is an XPath Union operator expression.
+  # Streams results lazily: yields from left first, then right, deduplicating on the fly.
   private class UnionQuery
     include Query
-    @iterator : IteratorFunc?
 
     def initialize(@left : Query, @right : Query)
-      @iterator = nil
+      @seen = Set(UInt64).new
+      @left_done = false
     end
 
     def select(iter : QueryIterator) : NodeNavigator?
-      if @iterator.nil?
-        list = Array(NodeNavigator).new
-        m = Hash(UInt64, Bool).new
-        root = iter.current.copy
-
+      # Stream from left side first
+      unless @left_done
         loop do
           if (node = @left.select(iter))
             code = XPath2.get_hash_code(node.copy)
-            unless m.has_key?(code)
-              m[code] = true
-              list << node.copy
+            unless @seen.includes?(code)
+              @seen << code
+              return node.copy
             end
           else
+            @left_done = true
             break
           end
         end
-        iter.current.move_to(root)
-        loop do
-          if (node = @right.select(iter))
-            code = XPath2.get_hash_code(node.copy)
-            unless m.has_key?(code)
-              m[code] = true
-              list << node.copy
-            end
-          else
-            break
-          end
-        end
-        i = 0
-        @iterator = IteratorFunc.new {
-          next nil if i >= list.size
-          node = list[i]
-          i += 1
-          node
-        }
       end
-      @iterator.not_nil!.call
+      # Then stream from right side
+      loop do
+        if (node = @right.select(iter))
+          code = XPath2.get_hash_code(node.copy)
+          unless @seen.includes?(code)
+            @seen << code
+            return node.copy
+          end
+        else
+          return nil
+        end
+      end
     end
 
     def evaluate(iter : QueryIterator) : ExprResult
-      @iterator = nil
+      @seen = Set(UInt64).new
+      @left_done = false
       @left.evaluate(iter)
       @right.evaluate(iter)
       self
@@ -912,32 +939,53 @@ module XPath2
   end
 
   protected def self.get_hash_code(n : NodeNavigator)
-    sb = IO::Memory.new
+    # Incremental FNV-1a hash — avoids building an intermediate string
+    hash = 14695981039346656037_u64 # FNV offset basis
     case n.node_type
     when .attribute?, .text?, .comment?
-      sb << "#{n.local_name}=#{n.value}"
+      hash = fnv_hash_str(hash, n.local_name)
+      hash = fnv_hash_byte(hash, '='.ord.to_u8)
+      hash = fnv_hash_str(hash, n.value)
       if n.move_to_parent
-        sb << n.local_name
+        hash = fnv_hash_str(hash, n.local_name)
       end
     when .element?
-      sb << "#{n.prefix}#{n.local_name}"
+      hash = fnv_hash_str(hash, n.prefix)
+      hash = fnv_hash_str(hash, n.local_name)
       d = 1
       while n.move_to_previous
         d += 1
       end
-      sb << "-%d" % d
+      hash = fnv_hash_byte(hash, '-'.ord.to_u8)
+      hash = fnv_hash_int(hash, d)
       while n.move_to_parent
         d = 1
         while n.move_to_previous
           d += 1
         end
-        sb << "-%d" % d
+        hash = fnv_hash_byte(hash, '-'.ord.to_u8)
+        hash = fnv_hash_int(hash, d)
       end
     else
       #
     end
-    h = Digest::FNV64A.digest(sb.to_s)
-    IO::ByteFormat::BigEndian.decode(UInt64, h)
+    hash
+  end
+
+  private def self.fnv_hash_byte(hash : UInt64, byte : UInt8) : UInt64
+    (hash ^ byte.to_u64) &* 1099511628211_u64
+  end
+
+  private def self.fnv_hash_str(hash : UInt64, s : String) : UInt64
+    s.each_byte { |b| hash = fnv_hash_byte(hash, b) }
+    hash
+  end
+
+  private def self.fnv_hash_int(hash : UInt64, v : Int32) : UInt64
+    hash = fnv_hash_byte(hash, (v & 0xFF).to_u8)
+    hash = fnv_hash_byte(hash, ((v >> 8) & 0xFF).to_u8)
+    hash = fnv_hash_byte(hash, ((v >> 16) & 0xFF).to_u8)
+    fnv_hash_byte(hash, ((v >> 24) & 0xFF).to_u8)
   end
 
   protected def self.get_node_position(q : Query) : Int32

@@ -799,8 +799,25 @@ module XPath2
     end
 
     private def allowed_char(ch : Char) : Bool
-      UNICODE_RANGE.each do |t|
-        if (t[0].unsafe_chr..t[1].unsafe_chr).includes?(ch)
+      c = ch.ord
+      # Fast-path: most XPath names are ASCII letters, digits, '_', '-', '.'
+      return true if c >= 0x61 && c <= 0x7A                                        # a-z
+      return true if c >= 0x41 && c <= 0x5A                                        # A-Z
+      return true if c >= 0x30 && c <= 0x39                                        # 0-9
+      return true if c == 0x5F || c == 0x2D || c == 0x2E || c == 0x3A || c == 0xB7 # _ - . : ·
+      return false if c < 0xC0                                                     # nothing else below 0xC0 is valid
+
+      # Binary search for non-ASCII characters
+      lo = 0
+      hi = UNICODE_RANGE.size - 1
+      while lo <= hi
+        mid = (lo + hi) >> 1
+        range = UNICODE_RANGE[mid]
+        if c < range[0]
+          hi = mid - 1
+        elsif c > range[1]
+          lo = mid + 1
+        else
           return true
         end
       end

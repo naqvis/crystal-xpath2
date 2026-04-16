@@ -1,12 +1,12 @@
 # Crystal XPath2
+
 ![CI](https://github.com/naqvis/crystal-xpath2/workflows/CI/badge.svg)
 [![GitHub release](https://img.shields.io/github/release/naqvis/crystal-xpath2.svg)](https://github.com/naqvis/crystal-xpath2/releases)
 [![Docs](https://img.shields.io/badge/docs-available-brightgreen.svg)](https://naqvis.github.io/crystal-xpath2/)
 
 **Crystal XPath2** Shard provide XPath implementation in **Pure Crystal**. Performs the compilation of XPath expression and provides mechanism to select/evaluate nodes from HTML or other documents using XPath expression
 
-Supported Features
-===
+# Supported Features
 
 #### The basic XPath patterns.
 
@@ -46,7 +46,6 @@ Supported Features
 
 - `(a, b, c)` : Evaluates each of its operands and concatenates the resulting sequences, in order, into a single result sequence
 
-
 #### Node Axes
 
 - `child::*` : The child axis selects children of the current node.
@@ -75,27 +74,25 @@ Supported Features
 
 #### Expressions
 
- Shard supports three types: number, boolean, string.
+Shard supports three types: number, boolean, string.
 
 - `path` : Selects nodes based on the path.
 
 - `a = b` : Standard comparisons.
-
-    * a `=` b	    `true` if a equals b.
-    * a `!=` b	`true` if a is not equal to b.
-    * a `<` b	    `true` if a is less than b.
-    * a `<=` b	`true` if a is less than or equal to b.
-    * a `>` b	    `true` if a is greater than b.
-    * a `>=` b	`true` if a is greater than or equal to b.
+  - a `=` b `true` if a equals b.
+  - a `!=` b `true` if a is not equal to b.
+  - a `<` b `true` if a is less than b.
+  - a `<=` b `true` if a is less than or equal to b.
+  - a `>` b `true` if a is greater than b.
+  - a `>=` b `true` if a is greater than or equal to b.
 
 - `a + b` : Arithmetic expressions.
-
-    * `- a`	Unary minus
-    * a `+` b	Add
-    * a `-` b	Substract
-    * a `*` b	Multiply
-    * a `div` b	Divide
-    * a `mod` b	Floating point mod, like Java.
+  - `- a` Unary minus
+  - a `+` b Add
+  - a `-` b Substract
+  - a `*` b Multiply
+  - a `div` b Divide
+  - a `mod` b Floating point mod, like Java.
 
 - `a or b` : Boolean `or` operation.
 
@@ -105,48 +102,58 @@ Supported Features
 
 - `fun(arg1, ..., argn)` : Function calls:
 
-| Function | Supported |
-| --- | --- |
-`boolean()`| ✓ |
-`ceiling()`| ✓ |
-`choose()`| ✗ |
-`concat()`| ✓ |
-`contains()`| ✓ |
-`count()`| ✓ |
-`current()`| ✗ |
-`document()`| ✗ |
-`element-available()`| ✗ |
-`ends-with()`| ✓ |
-`false()`| ✓ |
-`floor()`| ✓ |
-`format-number()`| ✗ |
-`function-available()`| ✗ |
-`generate-id()`| ✗ |
-`id()`| ✗ |
-`key()`| ✗ |
-`lang()`| ✗ |
-`last()`| ✓ |
-`local-name()`| ✓ |
-`name()`| ✓ |
-`namespace-uri()`| ✓ |
-`normalize-space()`| ✓ |
-`not()`| ✓ |
-`number()`| ✓ |
-`position()`| ✓ |
-`replace()`| ✓ |
-`reverse()`| ✓ |
-`round()`| ✓ |
-`starts-with()`| ✓ |
-`string()`| ✓ |
-`string-length()`| ✓ |
-`substring()`| ✓ |
-`substring-after()`| ✓ |
-`substring-before()`| ✓ |
-`sum()`| ✓ |
-`system-property()`| ✗ |
-`translate()`| ✓ |
-`true()`| ✓ |
-`unparsed-entity-url()` | ✗ |
+- `$variable` : Variable references. Variables are bound at compile time via `XPath2.compile(expr, variables)`.
+
+| Function               | Supported |
+| ---------------------- | --------- |
+| `abs()`                | ✓         |
+| `boolean()`            | ✓         |
+| `ceiling()`            | ✓         |
+| `compare()`            | ✓         |
+| `concat()`             | ✓         |
+| `contains()`           | ✓         |
+| `count()`              | ✓         |
+| `distinct-values()`    | ✓         |
+| `empty()`              | ✓         |
+| `ends-with()`          | ✓         |
+| `exists()`             | ✓         |
+| `false()`              | ✓         |
+| `floor()`              | ✓         |
+| `function-available()` | ✓         |
+| `generate-id()`        | ✓         |
+| `id()`                 | ✓         |
+| `index-of()`           | ✓         |
+| `insert-before()`      | ✓         |
+| `lang()`               | ✓         |
+| `last()`               | ✓         |
+| `local-name()`         | ✓         |
+| `lower-case()`         | ✓         |
+| `matches()`            | ✓         |
+| `name()`               | ✓         |
+| `namespace-uri()`      | ✓         |
+| `normalize-space()`    | ✓         |
+| `not()`                | ✓         |
+| `number()`             | ✓         |
+| `position()`           | ✓         |
+| `remove()`             | ✓         |
+| `replace()`            | ✓         |
+| `reverse()`            | ✓         |
+| `round()`              | ✓         |
+| `starts-with()`        | ✓         |
+| `string()`             | ✓         |
+| `string-join()`        | ✓         |
+| `string-length()`      | ✓         |
+| `subsequence()`        | ✓         |
+| `substring()`          | ✓         |
+| `substring-after()`    | ✓         |
+| `substring-before()`   | ✓         |
+| `sum()`                | ✓         |
+| `tokenize()`           | ✓         |
+| `translate()`          | ✓         |
+| `true()`               | ✓         |
+| `upper-case()`         | ✓         |
+
+> **Note:** XSLT-specific functions (`choose`, `current`, `document`, `element-available`, `format-number`, `key`, `system-property`, `unparsed-entity-url`) are not supported as they require an XSLT processing context.
 
 ## Installation
 
@@ -162,7 +169,7 @@ Supported Features
 
 ## Usage
 
-refer to `spec` for usage examples or refer to [Crystal HTML5](https://github.com/naqvis/crystal-html5) and [JSON XPath](https://github.com/naqvis/json-xpath) for implementation details.
+refer to `spec` for usage examples refer to `spec` or refer to [Crystal HTML5](https://github.com/naqvis/crystal-html5) and [JSON XPath](https://github.com/naqvis/json-xpath) for implementation details.
 
 ## Development
 

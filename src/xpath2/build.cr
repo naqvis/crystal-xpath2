@@ -9,14 +9,16 @@ module XPath2
     @depth : Int32
     @flag : Flag
     @first_input : Query
+    @bindings : Hash(String, ExprResult)
 
-    def initialize(@depth = 0, @flag = Flag::None, @first_input = NoopQuery.new)
+    def initialize(@depth = 0, @flag = Flag::None, @first_input = NoopQuery.new,
+                   @bindings = Hash(String, ExprResult).new)
     end
 
     # build builds a specified XPath expression expr
-    def self.build(expr : String)
+    def self.build(expr : String, bindings = Hash(String, ExprResult).new)
       root = Parser.parse(expr)
-      b = Builder.new
+      b = Builder.new(bindings: bindings)
       b.process_node(root)
     end
 
@@ -126,13 +128,35 @@ module XPath2
         arg2 = process_node(root.args[1])
         FunctionQuery.new(input: @first_input, func: substring_ind(arg1, arg2, root.funcname == "substring-after"))
       when "string-length"
-        raise XPath2Exception.new("string-length function must have at least one parameter") if root.args.size == 0
-        arg1 = process_node(root.args[0])
-        FunctionQuery.new(input: @first_input, func: string_length(arg1))
+        if root.args.size == 0
+          # Zero-arg form: return length of context node's string value
+          FunctionQuery.new(input: @first_input, func: XPathFunc.new { |q, t|
+            v = q.evaluate(t)
+            case v
+            when String
+              v.as(String).size.to_f64
+            when Query
+              if (node = v.select(t))
+                node.value.size.to_f64
+              else
+                0_f64
+              end
+            else
+              0_f64
+            end
+          })
+        else
+          arg1 = process_node(root.args[0])
+          FunctionQuery.new(input: @first_input, func: string_length(arg1))
+        end
       when "normalize-space"
-        raise XPath2Exception.new("normalize-space function must have at least one parameter") if root.args.size == 0
-        arg1 = process_node(root.args[0])
-        FunctionQuery.new(input: arg1, func: XPathFunc.new { |q, t| normalizespace(q, t) })
+        if root.args.size == 0
+          # Zero-arg form: normalize string value of context node
+          FunctionQuery.new(input: @first_input, func: XPathFunc.new { |q, t| normalizespace(q, t) })
+        else
+          arg1 = process_node(root.args[0])
+          FunctionQuery.new(input: arg1, func: XPathFunc.new { |q, t| normalizespace(q, t) })
+        end
       when "replace"
         raise XPath2Exception.new("replace function must have three parameters") unless root.args.size == 3
         arg1 = process_node(root.args[0])
@@ -203,6 +227,89 @@ module XPath2
         raise XPath2Exception.new("#{root.funcname}(node-sets) function must have parameter node-set") if root.args.size == 0
         arg = process_node(root.args[0])
         TransformFunctionQuery.new(input: arg, func: XPathXFunc.new { |q, t| reverse(q, t) })
+      when "matches"
+        raise XPath2Exception.new("matches() must have two or three arguments") if root.args.size < 2 || root.args.size > 3
+        arg1 = process_node(root.args[0])
+        arg2 = process_node(root.args[1])
+        arg3 = root.args.size == 3 ? process_node(root.args[2]) : nil
+        FunctionQuery.new(input: @first_input, func: matches(arg1, arg2, arg3))
+      when "lower-case"
+        raise XPath2Exception.new("lower-case() must have exactly one argument") if root.args.size != 1
+        arg1 = process_node(root.args[0])
+        FunctionQuery.new(input: @first_input, func: lower_case(arg1))
+      when "upper-case"
+        raise XPath2Exception.new("upper-case() must have exactly one argument") if root.args.size != 1
+        arg1 = process_node(root.args[0])
+        FunctionQuery.new(input: @first_input, func: upper_case(arg1))
+      when "lang"
+        raise XPath2Exception.new("lang() must have exactly one argument") if root.args.size != 1
+        arg1 = process_node(root.args[0])
+        FunctionQuery.new(input: @first_input, func: lang_func(arg1))
+      when "id"
+        raise XPath2Exception.new("id() must have exactly one argument") if root.args.size != 1
+        arg1 = process_node(root.args[0])
+        TransformFunctionQuery.new(input: @first_input, func: id_func(arg1))
+      when "generate-id"
+        raise XPath2Exception.new("generate-id() must have at most one argument") if root.args.size > 1
+        arg = root.args.size == 1 ? process_node(root.args[0]) : nil
+        FunctionQuery.new(input: @first_input, func: generate_id_func(arg))
+      when "function-available"
+        raise XPath2Exception.new("function-available() must have exactly one argument") if root.args.size != 1
+        arg1 = process_node(root.args[0])
+        FunctionQuery.new(input: @first_input, func: function_available_func(arg1))
+      when "tokenize"
+        raise XPath2Exception.new("tokenize() must have exactly two arguments") if root.args.size != 2
+        arg1 = process_node(root.args[0])
+        arg2 = process_node(root.args[1])
+        FunctionQuery.new(input: @first_input, func: tokenize_eval(arg1, arg2))
+      when "string-join"
+        raise XPath2Exception.new("string-join() must have exactly two arguments") if root.args.size != 2
+        arg1 = process_node(root.args[0])
+        arg2 = process_node(root.args[1])
+        FunctionQuery.new(input: @first_input, func: string_join_func(arg1, arg2))
+      when "abs"
+        raise XPath2Exception.new("abs() must have exactly one argument") if root.args.size != 1
+        arg1 = process_node(root.args[0])
+        FunctionQuery.new(input: @first_input, func: abs_func(arg1))
+      when "compare"
+        raise XPath2Exception.new("compare() must have exactly two arguments") if root.args.size != 2
+        arg1 = process_node(root.args[0])
+        arg2 = process_node(root.args[1])
+        FunctionQuery.new(input: @first_input, func: compare_func(arg1, arg2))
+      when "empty"
+        raise XPath2Exception.new("empty() must have exactly one argument") if root.args.size != 1
+        arg1 = process_node(root.args[0])
+        FunctionQuery.new(input: @first_input, func: empty_func(arg1))
+      when "exists"
+        raise XPath2Exception.new("exists() must have exactly one argument") if root.args.size != 1
+        arg1 = process_node(root.args[0])
+        FunctionQuery.new(input: @first_input, func: exists_func(arg1))
+      when "distinct-values"
+        raise XPath2Exception.new("distinct-values() must have exactly one argument") if root.args.size != 1
+        arg1 = process_node(root.args[0])
+        TransformFunctionQuery.new(input: arg1, func: distinct_values_func)
+      when "subsequence"
+        raise XPath2Exception.new("subsequence() must have two or three arguments") if root.args.size < 2 || root.args.size > 3
+        arg1 = process_node(root.args[0])
+        arg2 = process_node(root.args[1])
+        arg3 = root.args.size == 3 ? process_node(root.args[2]) : nil
+        TransformFunctionQuery.new(input: arg1, func: subsequence_func(arg1, arg2, arg3))
+      when "remove"
+        raise XPath2Exception.new("remove() must have exactly two arguments") if root.args.size != 2
+        arg1 = process_node(root.args[0])
+        arg2 = process_node(root.args[1])
+        TransformFunctionQuery.new(input: arg1, func: remove_func(arg1, arg2))
+      when "insert-before"
+        raise XPath2Exception.new("insert-before() must have exactly three arguments") if root.args.size != 3
+        arg1 = process_node(root.args[0])
+        arg2 = process_node(root.args[1])
+        arg3 = process_node(root.args[2])
+        TransformFunctionQuery.new(input: arg1, func: insert_before_func(arg1, arg2, arg3))
+      when "index-of"
+        raise XPath2Exception.new("index-of() must have exactly two arguments") if root.args.size != 2
+        arg1 = process_node(root.args[0])
+        arg2 = process_node(root.args[1])
+        FunctionQuery.new(input: @first_input, func: index_of_func(arg1, arg2))
       else
         raise XPath2Exception.new("#{root.funcname} not supported.")
       end
@@ -212,10 +319,11 @@ module XPath2
       left = process_node(root.left)
       right = process_node(root.right)
       case root.op
-      when "+", "-", "div", "mod" # Numeric operator
+      when "+", "-", "*", "div", "mod" # Numeric operator
         funcs = {
           "+"   => NumericFunc.new { |a, b| plus(a, b) },
           "-"   => NumericFunc.new { |a, b| minus(a, b) },
+          "*"   => NumericFunc.new { |a, b| mul(a, b) },
           "div" => NumericFunc.new { |a, b| div(a, b) },
           "mod" => NumericFunc.new { |a, b| mod(a, b) },
         }
@@ -257,6 +365,13 @@ module XPath2
           process_function_node(root.as(FunctionNode))
         when .operator?
           process_operator_node(root.as(OperatorNode))
+        when .variable?
+          vnode = root.as(VariableNode)
+          # VariableNode constructor is (name, prefix) but parser calls it as
+          # VariableNode.new(@r.prefix, @r.name) — so the actual variable name
+          # is in @prefix and the namespace prefix is in @name
+          var_name = vnode.name.empty? ? vnode.prefix : "#{vnode.name}:#{vnode.prefix}"
+          VariableQuery.new(var_name, @bindings)
         else
           raise XPath2Exception.new("Unsupported XPath node type : #{root.type}")
         end

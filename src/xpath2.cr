@@ -14,6 +14,17 @@ module XPath2
     raise XPath2Exception.new("undeclared variable in XPath expression: #{expr}")
   end
 
+  # compile compiles an XPath expression string with variable bindings.
+  # Variables can be referenced in the expression as $name.
+  # Example: compile("//item[@id=$target]", {"target" => "123"})
+  def self.compile(expr : String, variables : Hash(String, ExprResult))
+    raise XPath2Exception.new("xpath expression is blank") if expr.empty?
+    if (qry = Builder.build(expr, variables))
+      return Expr.new(expr, qry)
+    end
+    raise XPath2Exception.new("undeclared variable in XPath expression: #{expr}")
+  end
+
   # NodeType represents XPath node.
   enum NodeType
     Root      = 0 # Root node of the XML document or node tree.
